@@ -1,6 +1,6 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import { getFirestore } from "firebase/firestore";
+import { getFirestore, connectFirestoreEmulator } from "firebase/firestore";
 import {
   getAuth,
   FacebookAuthProvider,
@@ -27,5 +27,10 @@ const auth = getAuth(app);
 const db = getFirestore(app);
 const providerFb = new FacebookAuthProvider();
 const providerGg = new GoogleAuthProvider();
+
+if (location.hostname === "localhost") {
+  connectFirestoreEmulator(db, "127.0.0.1", 8080);
+  console.log("Connect elumator success");
+}
 
 export { auth, providerFb, providerGg, db };
