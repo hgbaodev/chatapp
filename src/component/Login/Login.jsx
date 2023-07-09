@@ -1,6 +1,8 @@
+/* eslint-disable no-unused-vars */
 import { Row, Col, Typography, Button } from "antd";
 import { signInWithPopup } from "firebase/auth";
 import { auth, providerGg } from "../firebase/config";
+
 const { Title } = Typography;
 
 const Login = () => {
@@ -13,13 +15,6 @@ const Login = () => {
         console.log(error);
       });
   };
-
-  auth.onAuthStateChanged((user) => {
-    console.log({ user });
-    if(user) {
-      
-    }
-  });
 
   return (
     <Row justify="center" style={{ height: "800px" }}>
