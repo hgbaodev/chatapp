@@ -37,14 +37,31 @@ const WrapperStyles = styled.div`
   height: 100vh;
 `;
 
-const MessageListStyles = styled.div``;
+const MessageListStyles = styled.div`
+  max-height: 100%;
+  overflow-y: auto;
+`;
 
 const ContentStyles = styled.div`
-  height: calc(100% - 56px);
+  height: calc(100% - 80px);
   display: flex;
   flex-direction: column;
   padding: 11px;
   justify-content: flex-end;
+`;
+
+const FormStyles = styled(Form)`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 2px 2px 2px 0;
+  border: 1px solid rgb(230, 230, 230);
+  border-radius: 2px;
+
+  .ant-form-item {
+    flex: 1;
+    margin-bottom: 0;
+  }
 `;
 
 const ChatWindow = () => {
@@ -102,12 +119,16 @@ const ChatWindow = () => {
             createAt="10/07/2023"
           ></Message>
         </MessageListStyles>
-        <Form>
+        <FormStyles>
           <Form.Item>
-            <Input></Input>
+            <Input
+              placeholder="Nhập tin nhắn...."
+              bordered={false}
+              autoComplete="off"
+            ></Input>
           </Form.Item>
-          <Button>Gửi</Button>
-        </Form>
+          <Button type="primary">Gửi</Button>
+        </FormStyles>
       </ContentStyles>
     </WrapperStyles>
   );

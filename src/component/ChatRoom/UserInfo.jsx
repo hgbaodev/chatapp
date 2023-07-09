@@ -1,5 +1,8 @@
 import { Avatar, Button, Typography } from "antd";
 import { styled } from "styled-components";
+import { auth, db } from "../firebase/config";
+import { useEffect } from "react";
+import { collection, getDocs } from "firebase/firestore";
 
 const WrapperStyled = styled.div`
   display: flex;
@@ -14,13 +17,31 @@ const WrapperStyled = styled.div`
 `;
 
 const UserInfo = () => {
+  useEffect(() => {
+    const usersRef = collection(db, "users");
+    getDocs(usersRef).then((snapshot) => {
+      const data = snapshot.docs.map((doc) => ({
+        ...doc.data(),
+        id: doc.id,
+      }));
+      console.log({ data, snapshot, docs: snapshot.docs });
+    });
+  }, []);
+
+  const handleLogout = () => {
+    console.log("logout");
+    auth.signOut();
+  };
+
   return (
     <WrapperStyled>
       <div>
         <Avatar>A</Avatar>
         <Typography.Text className="username">ABC</Typography.Text>
       </div>
-      <Button ghost>Đăng xuất</Button>
+      <Button onClick={handleLogout} ghost>
+        Đăng xuất
+      </Button>
     </WrapperStyled>
   );
 };

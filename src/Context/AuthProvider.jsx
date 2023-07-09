@@ -13,8 +13,7 @@ const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     const unsubscribed = auth.onAuthStateChanged((user) => {
-      const check = { user };
-      if (check) {
+      if (user) {
         const { displayName, email, uid, photoURL } = user;
         setUser({
           displayName,
@@ -25,6 +24,7 @@ const AuthProvider = ({ children }) => {
         setIsLoading(false);
         navigate("/");
       } else {
+        setIsLoading(false);
         navigate("/login");
       }
     });

@@ -27,7 +27,9 @@ const Message = ({ text, displayName, createAt, photoUrl }) => {
   return (
     <MessageStyles>
       <div>
-        <Avatar src={photoUrl}>A</Avatar>
+        <Avatar src={photoUrl} size="small">
+          A
+        </Avatar>
         <Typography.Text className="author">{displayName}</Typography.Text>
         <Typography.Text className="date">{createAt}</Typography.Text>
       </div>

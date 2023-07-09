@@ -2,14 +2,25 @@
 import { Row, Col, Typography, Button } from "antd";
 import { signInWithPopup } from "firebase/auth";
 import { auth, providerGg } from "../firebase/config";
-
+import { addDocument } from "../firebase/services";
 const { Title } = Typography;
 
 const Login = () => {
-  const handleGgLogin = () => {
-    signInWithPopup(auth, providerGg)
+  const handleGgLogin = async () => {
+    await signInWithPopup(auth, providerGg)
       .then((result) => {
-        console.log("Login success");
+        console.log(result);
+        const { _tokenResponse, user, providerId } = result;
+        if (_tokenResponse?.isNewUser) {
+          addDocument("users", {
+            displayaName: user.displayName,
+            email: user.email,
+            photoURL: user.photoURL,
+            uid: user.uid,
+            providerId: providerId,
+          });
+          console.log("Add user success");
+        }
       })
       .catch((error) => {
         console.log(error);
