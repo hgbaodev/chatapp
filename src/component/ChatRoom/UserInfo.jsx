@@ -1,8 +1,7 @@
 import { Avatar, Button, Typography } from "antd";
 import { styled } from "styled-components";
-import { auth, db } from "../firebase/config";
-import { useContext, useEffect } from "react";
-import { collection, getDocs } from "firebase/firestore";
+import { auth } from "../firebase/config";
+import { useContext } from "react";
 import { AuthContext } from "../../Context/AuthProvider";
 
 const WrapperStyled = styled.div`
@@ -18,17 +17,6 @@ const WrapperStyled = styled.div`
 `;
 
 const UserInfo = () => {
-  // useEffect(() => {
-  //   const usersRef = collection(db, "users");
-  //   getDocs(usersRef).then((snapshot) => {
-  //     const data = snapshot.docs.map((doc) => ({
-  //       ...doc.data(),
-  //       id: doc.id,
-  //     }));
-  //     console.log({ data, snapshot, docs: snapshot.docs });
-  //   });
-  // }, []);
-
   const { displayName, photoURL } = useContext(AuthContext);
   const handleLogout = () => {
     console.log("logout");
