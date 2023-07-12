@@ -7,7 +7,6 @@ export const addDocument = async (col, data) => {
     createAt: serverTimestamp(),
   });
 };
-
 export const generateKeywords = (displayName) => {
   // liet ke tat cac hoan vi. vd: name = ["David", "Van", "Teo"]
   // => ["David", "Van", "Teo"], ["David", "Teo", "Van"], ["Teo", "David", "Van"],...

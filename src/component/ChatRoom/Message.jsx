@@ -1,6 +1,7 @@
 /* eslint-disable no-unused-vars */
 
 import { Avatar, Typography } from "antd";
+import { formatRelative } from "date-fns/esm";
 import { styled } from "styled-components";
 
 const MessageStyles = styled.div`
@@ -22,16 +23,28 @@ const MessageStyles = styled.div`
   }
 `;
 
+function formatDate(seconds) {
+  let formattedDate = "";
+  if (seconds) {
+    formattedDate = formatRelative(new Date(seconds * 1000), new Date());
+    formattedDate =
+      formattedDate.charAt(0).toUpperCase() + formattedDate.slice(1);
+  }
+  return formattedDate;
+}
+
 /* eslint-disable react/prop-types */
 const Message = ({ text, displayName, createAt, photoUrl }) => {
   return (
     <MessageStyles>
       <div>
         <Avatar src={photoUrl} size="small">
-          A
+          {photoUrl ? "" : displayName?.charAt(0)?.toUpperCase()}
         </Avatar>
         <Typography.Text className="author">{displayName}</Typography.Text>
-        <Typography.Text className="date">{createAt}</Typography.Text>
+        <Typography.Text className="date">
+          {formatDate(createAt?.seconds)}
+        </Typography.Text>
       </div>
       <div>
         <Typography.Text className="content">{text}</Typography.Text>

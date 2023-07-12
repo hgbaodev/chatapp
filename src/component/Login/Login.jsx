@@ -2,7 +2,7 @@
 import { Row, Col, Typography, Button } from "antd";
 import { signInWithPopup } from "firebase/auth";
 import { auth, providerGg } from "../firebase/config";
-import { addDocument } from "../firebase/services";
+import { addDocument, generateKeywords } from "../firebase/services";
 const { Title } = Typography;
 
 const Login = () => {
@@ -18,6 +18,7 @@ const Login = () => {
             photoURL: user.photoURL,
             uid: user.uid,
             providerId: providerId,
+            keywords: generateKeywords(user.displayName),
           });
           console.log("Add user success");
         }

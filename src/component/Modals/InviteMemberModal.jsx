@@ -1,22 +1,24 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 import { Avatar, Form, Modal, Select, Spin } from "antd";
 import { useForm } from "antd/es/form/Form";
 import { useContext, useMemo, useState } from "react";
 import { AppContext } from "../../Context/AppProvider";
-import { addDocument } from "../firebase/services";
-import { AuthContext } from "../../Context/AuthProvider";
 import { debounce } from "lodash";
 import PropTypes from "prop-types";
+import { db } from "../firebase/config";
+import { collection, getDocs, query, where } from "firebase/firestore";
+import { doc, updateDoc } from "firebase/firestore";
 
 function DebounceSelect({ fetchOptions, debounceTimeout = 300, ...props }) {
   const [fetching, setFetching] = useState(false);
   const [options, setOptions] = useState([]);
 
-  const debounceFecher = useMemo(() => {
+  const debounceFetcher = useMemo(() => {
     const loadOptions = (value) => {
       setOptions([]);
       setFetching(true);
 
-      fetchOptions(value).then((newOptions) => {
+      fetchOptions(value, props.curMembers).then((newOptions) => {
         setOptions(newOptions);
         setFetching(false);
       });
@@ -27,43 +29,74 @@ function DebounceSelect({ fetchOptions, debounceTimeout = 300, ...props }) {
   return (
     <Select
       labelInValue
-      onSearch={debounceFecher}
+      filterOption={false}
+      onSearch={debounceFetcher}
       notFoundContent={fetching ? <Spin size="small"></Spin> : null}
       {...props}
     >
-      {
-        //[(label, value, photoURL)]
-        options.map((option) => (
-          <Select.Option key={option.uid}>
-            <Avatar size="small" src={option.photoURL}>
-              {option.photoURL ? "" : option.label?.charAt(0)?.toUpperCase()}
-            </Avatar>
-          </Select.Option>
-        ))
-      }
+      {options.map((opt) => (
+        <Select.Option key={opt.value} value={opt.value} title={opt.label}>
+          <Avatar size="small" src={opt.photoURL}>
+            {opt.photoURL ? "" : opt.label?.charAt(0)?.toUpperCase()}
+          </Avatar>
+          {` ${opt.label}`}
+        </Select.Option>
+      ))}
     </Select>
   );
 }
 
-async function fetchUserList() {}
+async function fetchUserList(search, curMembers) {
+  const colRefQuery = collection(db, "users");
+  const q = query(colRefQuery, where("keywords", "array-contains", search));
+
+  const snapshot = await getDocs(q);
+  const data = snapshot.docs
+    .map((doc) => ({
+      label: doc.data().displayName,
+      value: doc.data().uid,
+      photoURL: doc.data().photoURL,
+    }))
+    .filter(
+      (opt) =>
+        curMembers &&
+        Array.isArray(curMembers) &&
+        !curMembers.includes(opt.value)
+    );
+  console.log(data);
+  return data;
+}
 
 const InviteMemberModal = () => {
-  const { isInviteMemberVisible, setIsInviteMemberVisible } =
+  const { isInviteMemberVisible, setIsInviteMemberVisible, selectedRoom } =
     useContext(AppContext);
   const [value, setValue] = useState([]);
-  const { uid } = useContext(AuthContext);
   const [form] = useForm();
+
   const handleOk = () => {
-    //add new rooms firestore
-    addDocument("rooms", { ...form.getFieldValue(), members: [uid] });
-    form.resetFields();
-    setIsInviteMemberVisible(false);
+    const roomRef = doc(db, "rooms", selectedRoom?.id);
+    const newMembers = [
+      ...(selectedRoom?.members || []),
+      ...(value.map((val) => val.value) || []),
+    ];
+    updateDoc(roomRef, { members: newMembers })
+      .then(() => {
+        form.resetFields(); // Reset form fields
+        setValue([]); // Reset value state
+        setIsInviteMemberVisible(false);
+      })
+      .catch((error) => {
+        // Handle error when updating data
+        console.log("Error updating room members:", error);
+      });
   };
 
   const handleCancel = () => {
     form.resetFields();
+    setValue([]); // Reset value state
     setIsInviteMemberVisible(false);
   };
+
   return (
     <div>
       <Modal
@@ -83,16 +116,12 @@ const InviteMemberModal = () => {
             style={{
               width: "100%",
             }}
-          ></DebounceSelect>
+            curMembers={selectedRoom?.members}
+          />
         </Form>
       </Modal>
     </div>
   );
-};
-
-InviteMemberModal.propTypes = {
-  isInviteMemberVisible: PropTypes.bool.isRequired,
-  setIsInviteMemberVisible: PropTypes.func.isRequired,
 };
 
 DebounceSelect.propTypes = {
