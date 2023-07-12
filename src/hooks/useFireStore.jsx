@@ -3,7 +3,7 @@ import {
   collection,
   query,
   where,
-  orderBy,
+  // orderBy,
   onSnapshot,
 } from "firebase/firestore";
 import { db } from "../component/firebase/config";
@@ -11,24 +11,30 @@ import { db } from "../component/firebase/config";
 const useFireStore = (colRef, condition) => {
   const [documents, setDocuments] = useState([]);
   useEffect(() => {
-    //Firestore Queries
-    const colRefQuery = collection(db, "rooms");
+    // Firestore Queries
+    const colRefQuery = collection(db, colRef);
     const q = query(
       colRefQuery,
-      where(condition.fieldName, condition.operator, condition.compareValue),
-      orderBy("createdAt")
+      where(condition.fieldName, condition.operator, condition.compareValue)
     );
-    onSnapshot(q, (snapshot) => {
-      let rooms = [];
-      snapshot.docs.forEach((doc) => {
-        rooms.push({
+
+    const unsubscribe = onSnapshot(q, (snapshot) => {
+      let datas = [];
+      snapshot.forEach((doc) => {
+        datas.push({
           id: doc.id,
           ...doc.data(),
         });
       });
-      setDocuments(rooms);
+      setDocuments(datas);
     });
+
+    return () => {
+      // Unsubscribe from the snapshot listener when the component unmounts
+      unsubscribe();
+    };
   }, [colRef, condition]);
+
   return documents;
 };
 

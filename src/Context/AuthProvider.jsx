@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import React, { useEffect, useState } from "react";
 import { Spin } from "antd";
 import { auth } from "../component/firebase/config";
+import PropTypes from "prop-types";
 
 export const AuthContext = React.createContext();
 
@@ -42,4 +43,7 @@ const AuthProvider = ({ children }) => {
   );
 };
 
+AuthProvider.propTypes = {
+  children: PropTypes.node.isRequired,
+};
 export default AuthProvider;

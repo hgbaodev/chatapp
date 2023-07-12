@@ -2,6 +2,8 @@ import { UserAddOutlined } from "@ant-design/icons";
 import { Avatar, Button, Form, Input, Tooltip } from "antd";
 import { styled } from "styled-components";
 import Message from "./Message";
+import { useContext } from "react";
+import { AppContext } from "../../Context/AppProvider";
 
 const HeaderStyles = styled.div`
   display: flex;
@@ -65,71 +67,80 @@ const FormStyles = styled(Form)`
 `;
 
 const ChatWindow = () => {
+  const { selectedRoom, members, setIsInviteMemberVisible } =
+    useContext(AppContext);
+
   return (
     <WrapperStyles>
-      <HeaderStyles>
-        <div className="header__info">
-          <p className="header__title">Room 1</p>
-          <span className="header__desciption">Đây là room 1</span>
-        </div>
-        <ButtonGroupStyles>
-          <Button icon={<UserAddOutlined></UserAddOutlined>} type="text">
-            Mời
-          </Button>
-          <Avatar.Group size="small" maxCount={2}>
-            <Tooltip title="A">
-              <Avatar>A</Avatar>
-            </Tooltip>
-            <Tooltip title="B">
-              <Avatar>A</Avatar>
-            </Tooltip>
-            <Tooltip title="">
-              <Avatar>A</Avatar>
-            </Tooltip>
-            <Tooltip title="A">
-              <Avatar>A</Avatar>
-            </Tooltip>
-          </Avatar.Group>
-        </ButtonGroupStyles>
-      </HeaderStyles>
-      <ContentStyles>
-        <MessageListStyles>
-          <Message
-            text="Test"
-            photoUrl={null}
-            displayName="hgbaodev"
-            createAt="10/07/2023"
-          ></Message>
-          <Message
-            text="Test"
-            photoUrl={null}
-            displayName="hgbaodev"
-            createAt="10/07/2023"
-          ></Message>
-          <Message
-            text="Test"
-            photoUrl={null}
-            displayName="hgbaodev"
-            createAt="10/07/2023"
-          ></Message>
-          <Message
-            text="Test"
-            photoUrl={null}
-            displayName="hgbaodev"
-            createAt="10/07/2023"
-          ></Message>
-        </MessageListStyles>
-        <FormStyles>
-          <Form.Item>
-            <Input
-              placeholder="Nhập tin nhắn...."
-              bordered={false}
-              autoComplete="off"
-            ></Input>
-          </Form.Item>
-          <Button type="primary">Gửi</Button>
-        </FormStyles>
-      </ContentStyles>
+      {selectedRoom && (
+        <HeaderStyles>
+          <div className="header__info">
+            <p className="header__title">{selectedRoom?.name}</p>
+            <span className="header__desciption">
+              {selectedRoom?.description}
+            </span>
+          </div>
+          <ButtonGroupStyles>
+            <Button
+              icon={<UserAddOutlined></UserAddOutlined>}
+              type="text"
+              onClick={() => setIsInviteMemberVisible(true)}
+            >
+              Mời
+            </Button>
+            <Avatar.Group size="small" maxCount={2}>
+              {members.length > 0 &&
+                members.map((item) => (
+                  <Tooltip title={item.displayName} key={item.id}>
+                    <Avatar src={item.photoURL}>
+                      {item.displayName?.charAt(0).toUpperCase()}
+                    </Avatar>
+                  </Tooltip>
+                ))}
+            </Avatar.Group>
+          </ButtonGroupStyles>
+        </HeaderStyles>
+      )}
+      {selectedRoom && (
+        <ContentStyles>
+          <MessageListStyles>
+            <Message
+              text="Test"
+              photoUrl={null}
+              displayName="hgbaodev"
+              createAt="10/07/2023"
+            ></Message>
+            <Message
+              text="Test"
+              photoUrl={null}
+              displayName="hgbaodev"
+              createAt="10/07/2023"
+            ></Message>
+            <Message
+              text="Test"
+              photoUrl={null}
+              displayName="hgbaodev"
+              createAt="10/07/2023"
+            ></Message>
+            <Message
+              text="Test"
+              photoUrl={null}
+              displayName="hgbaodev"
+              createAt="10/07/2023"
+            ></Message>
+          </MessageListStyles>
+          <FormStyles>
+            <Form.Item>
+              <Input
+                placeholder="Nhập tin nhắn...."
+                bordered={false}
+                autoComplete="off"
+              ></Input>
+            </Form.Item>
+            <Button type="primary">Gửi</Button>
+          </FormStyles>
+        </ContentStyles>
+      )}
     </WrapperStyles>
   );
 };

@@ -13,7 +13,7 @@ const Login = () => {
         const { _tokenResponse, user, providerId } = result;
         if (_tokenResponse?.isNewUser) {
           addDocument("users", {
-            displayaName: user.displayName,
+            displayName: user.displayName,
             email: user.email,
             photoURL: user.photoURL,
             uid: user.uid,
