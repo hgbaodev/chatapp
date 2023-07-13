@@ -15,7 +15,11 @@ const useFireStore = (colRef, condition) => {
     const colRefQuery = collection(db, colRef);
     const q = query(
       colRefQuery,
-      where(condition.fieldName, condition.operator, condition.compareValue),
+      where(
+        condition.fieldName,
+        condition.operator,
+        condition.compareValue || ""
+      ),
       orderBy("createAt")
     );
 
