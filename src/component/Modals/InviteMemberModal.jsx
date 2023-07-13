@@ -24,7 +24,7 @@ function DebounceSelect({ fetchOptions, debounceTimeout = 300, ...props }) {
       });
     };
     return debounce(loadOptions, debounceTimeout);
-  }, [debounceTimeout, fetchOptions]);
+  }, [debounceTimeout, fetchOptions, props]);
 
   return (
     <Select
