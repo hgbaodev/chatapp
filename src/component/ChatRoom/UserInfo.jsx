@@ -19,8 +19,9 @@ const WrapperStyled = styled.div`
 const UserInfo = () => {
   const { displayName, photoURL } = useContext(AuthContext);
   const handleLogout = () => {
-    console.log("logout");
+    
     auth.signOut();
+    console.log("Logout Success");
   };
 
   return (

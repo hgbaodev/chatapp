@@ -9,7 +9,6 @@ const Login = () => {
   const handleGgLogin = async () => {
     await signInWithPopup(auth, providerGg)
       .then((result) => {
-        console.log(result);
         const { _tokenResponse, user, providerId } = result;
         if (_tokenResponse?.isNewUser) {
           addDocument("users", {
@@ -20,7 +19,6 @@ const Login = () => {
             providerId: providerId,
             keywords: generateKeywords(user.displayName),
           });
-          console.log("Add user success");
         }
       })
       .catch((error) => {
