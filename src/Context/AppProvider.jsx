@@ -43,10 +43,6 @@ const AppProvider = ({ children }) => {
   }, [selectedRoom.members]);
 
   const members = useFireStore("users", usersCondition);
-  console.log(
-    "🚀 ~ file: AppProvider.jsx:46 ~ AppProvider ~ members:",
-    members
-  );
 
   return (
     <AppContext.Provider

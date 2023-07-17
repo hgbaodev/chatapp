@@ -100,7 +100,6 @@ const ChatWindow = () => {
   }, [selectedRoom.id]);
 
   const messages = useFireStore("messages", messCondition);
-  console.log(messages);
 
   return (
     <WrapperStyles>

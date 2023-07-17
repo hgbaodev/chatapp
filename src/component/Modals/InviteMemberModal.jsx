@@ -18,6 +18,7 @@ function DebounceSelect({ fetchOptions, debounceTimeout = 300, ...props }) {
       setOptions([]);
       setFetching(true);
 
+      // eslint-disable-next-line react/prop-types
       fetchOptions(value, props.curMembers).then((newOptions) => {
         setOptions(newOptions);
         setFetching(false);
@@ -63,7 +64,6 @@ async function fetchUserList(search, curMembers) {
         Array.isArray(curMembers) &&
         !curMembers.includes(opt.value)
     );
-  console.log(data);
   return data;
 }
 
