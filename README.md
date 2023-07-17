@@ -30,6 +30,8 @@
    npm run dev
    ```
 
+[Screencast from 2023-03-22 22-59-52.webm](https://github.com/hgbaodev/chatapp/assets/120194990/69c612d0-b648-492c-b223-2f0c3263b937)
+
 ### Interface
 
 ![Interface homepage](/src/assets/login.jpeg)
